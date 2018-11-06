@@ -8,5 +8,5 @@ access_secret <- "3SHnX5AxLwEND3c6pgQyTcvS3rdZE3Oti1OHypzjaG8XU"
 
 setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
 
-tweets <- searchTwitteR("eagle", n=10)
+tweets <- searchTwitteR("w\U00FCrzburg", n=10)
 print(tweets)
