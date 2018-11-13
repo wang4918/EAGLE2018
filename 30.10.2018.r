@@ -81,6 +81,7 @@ x2
 summary(x2)
 levels(x2)
 
+
 #steigerwald
 sw <- read.csv2("steigerwald.csv", header = TRUE, sep = ",", quote = "\"")
 
@@ -90,6 +91,7 @@ names(spdf.obj)
 
 library(sp)
 coordinates(spdf.obj) <- ~x+y
+proj4string(spdf.obj) <- CRS("+init=epsg:25832")
 
 class(spdf.obj)
 library(rgdal)
