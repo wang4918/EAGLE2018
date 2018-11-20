@@ -7,12 +7,12 @@ praise()
 devtools::install_github("brooke-watson/BRRR")
 
 library(BRRR)
-
-for(x in 1:2){
-  skrrrahh("bigboi")
-}
-
 skrrrahh_list()
+
+skrahfun <-  function(sound, timer){
+  Sys.sleep(timer)
+  BRRR::skrrrahh(sound)
+}
 
 #Importing vector data
 library(rgdal)
@@ -41,6 +41,7 @@ x <- data.frame(x=1, y=1, label="ggplot intro \nEAGLE")
 ggplot(data=x, aes(x=x, y=y)) +geom_text(aes(label=label), size = 15)
 
 df <- data.frame(a = bigdf$measure2, b = bigdf$measure3)
+
 ggplot(df, aes(a,b, color = bigdf$measure1)) + 
   geom_point(alpha = .5) + 
   labs(title = "Nonsensical Unsinn",x = "Nonsense", y = "Unsinn", color = "Gibberish")

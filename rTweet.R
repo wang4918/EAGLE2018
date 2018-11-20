@@ -3,6 +3,7 @@
 #install.packages("ggplot2")
 #install.packages("maps")
 
+#Logging in and Setup
 library(rtweet)
 library(colorfindr)
 library(ggplot2)
@@ -18,7 +19,7 @@ create_token(
 
 
 #Search Twitter and the TweetJSON
-tweets <- search_tweets("w\U00FCrzburg", n=1, parse = FALSE) #n up to 18,000
+tweets <- search_tweets("w\U00FCrzburg", n=1, parse = TRUE) #n up to 18,000
 print(tweets)
 
 #Search Booleans and Parameters
@@ -32,9 +33,6 @@ tweets <- search_tweets("Apple -iPhone", lang="en", n = 10)
 View(tweets)
 
 tweets <- search_tweets("cat filter:media", lang="en", n = 10, include_rts = FALSE)
-View(tweets)
-
-tweets <- search_tweets("cat", geocode = lookup_coords("minnesota"))
 View(tweets)
 
 tweets <- search_tweets("katze", geocode = lookup_coords("germany"))
@@ -66,8 +64,10 @@ View(tweets)
 
 #Simple data analysis
 tweetdata <- ts_data(tweets, by = "days")
-ggplot(tweetdata, aes(time)) + geom_bar(aes(weight = n),
-  position = position_stack(reverse = TRUE)) + coord_flip() +
+ggplot(tweetdata, aes(time)) +
+  geom_bar(aes(weight = n),
+  position = position_stack(reverse = TRUE)) +
+  coord_flip() +
   theme(legend.position = "top")
 
 #Mapping data
