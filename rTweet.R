@@ -1,6 +1,12 @@
 #install.packages("rtweet")
+#install.packages("colorfindr")
+#install.packages("ggplot2")
+#install.packages("maps")
 
 library(rtweet)
+library(colorfindr)
+library(ggplot2)
+library(maps)
 
 create_token(
   app = "GEOCOMP2018 Group Project",
@@ -10,11 +16,9 @@ create_token(
   access_secret <- "3SHnX5AxLwEND3c6pgQyTcvS3rdZE3Oti1OHypzjaG8XU"
 )
 
-#Stream Tweets
-tweets <- stream_tweets(lookup_coords("germany"), timeout = 10 )
 
-#Search Twitter
-tweets <- search_tweets("w\U00FCrzburg", n=10)
+#Search Twitter and the TweetJSON
+tweets <- search_tweets("w\U00FCrzburg", n=1, parse = FALSE) #n up to 18,000
 print(tweets)
 
 #Search Booleans and Parameters
@@ -24,10 +28,16 @@ View(tweets)
 tweets <- search_tweets("Samsung AND Apple :(", n = 10) #AND with negative sentiment
 View(tweets)
 
-tweets <- search_tweets("cat filter:media", lang="de", n = 10, include_rts = FALSE)
+tweets <- search_tweets("Apple -iPhone", lang="en", n = 10)
 View(tweets)
 
-tweets <- search_tweets("ist", geocode = "49.78835749241399,9.964599609375, 50mi")
+tweets <- search_tweets("cat filter:media", lang="en", n = 10, include_rts = FALSE)
+View(tweets)
+
+tweets <- search_tweets("cat", geocode = lookup_coords("minnesota"))
+View(tweets)
+
+tweets <- search_tweets("katze", geocode = lookup_coords("germany"))
 View(tweets)
 
 #headers
@@ -44,12 +54,11 @@ users$friends_count
 colnames(users)
 
 #Messing with profile image
-library(colorfindr)
 pacman::p_load(colorfindr, dplyr)
 get_colors(
   img = users$profile_image_url[2]
 ) %>% 
-  plot_colors_3d(sample_size = 100, marker_size = 2.5, color_space = "RGB")
+  plot_colors_3d(sample_size = 1000, marker_size = 2.5, color_space = "RGB")
 
 #Timelines
 tweets <- get_timelines(users$screen_name, n = 100)
@@ -57,8 +66,17 @@ View(tweets)
 
 #Simple data analysis
 tweetdata <- ts_data(tweets, by = "days")
-ggplot(tweetdata, aes(time)) + geom_bar(aes(weight = n),position = position_stack(reverse = TRUE)) + coord_flip() +
+ggplot(tweetdata, aes(time)) + geom_bar(aes(weight = n),
+  position = position_stack(reverse = TRUE)) + coord_flip() +
   theme(legend.position = "top")
+
+#Mapping data
+tweetdata <- search_tweets(lang = "de", geocode = lookup_coords("usa"), n =1000)
+tweetdata <- lat_lng(tweetdata)
+
+par(mar = c(0, 0, 0, 0))
+map("state", lwd = .25)
+with(tweetdata, points(lng, lat, pch = 20, cex = .75, col = rgb(0, .3, .7, .75)))
 
 #Trends
 trends <- get_trends(woeid = 1) #Worldwide trends
@@ -66,4 +84,29 @@ View(trends)
 
 trends <- get_trends(lat = 49.788, lng = 9.964) #Nearest to Wuerzburg
 View(trends)
+
+
+#Stream Tweets
+tweets <- stream_tweets(loc1, timeout = 10 )
+loc1 <- lookup_coords("minneapolis")
+loc1 <- lookup_coords("würzburg")
+loc1 <- lookup_coords("bavaria")
+loc1 <- lookup_coords("germany")
+
+stream_tweets(
+  "samsung, apple, nokia, huawei, micromax, xiaomi, oppo, alcatel",
+  timeout = 60*60*24*7,
+  file_name = "smartphonetweets.json",
+  parse = FALSE
+)
+
+#Twitter Developer Platform:
+#https://developer.twitter.com/en.html
+
+#rtweet:
+#https://rtweet.info/index.html
+
+#Ethics:
+#https://developer.twitter.com/en/developer-terms/more-on-restricted-use-cases
+
 
