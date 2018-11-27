@@ -66,4 +66,23 @@ ggplot(steiger, aes(x=L8.ndvi, y=SRTM))+
   geom_point(aes(color = LCname), size =2)+
   facet_grid(.~LCname)+
   coord_flip()
-  
+
+#ggmap #install.packages("ggmap")
+library(ggmap)
+library(mapproj)
+#Not working:
+#map.wue <- get_map("germany", force = TRUE, source = "osm", "AIzaSyBl0MmBa_-NRAWalhZAf4QLxcyJCAgySaU")
+
+#LSAT
+lsatdf <- data.frame(coordinates(lsat), getValues(lsat))
+ggplot(lsatdf)+
+  geom_raster(aes(x=x, y=y, fill = B3_dn))+
+  scale_fill_gradient(na.value = NA)+
+  coord_equal()
+
+library(RStoolbox)
+ggRGB(lsat, 3,2,1, stretch = "lin")
+
+ggR(lsat, layer = 3, stretch = "hist", geom_raster = TRUE)+
+  scale_fill_gradient(low = "yellow", high = "chartuse")
+
